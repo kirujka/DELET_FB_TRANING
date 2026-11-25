@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FB Anfang">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>FB Anfang</title>
+<style>
+:root{--bg:#f7f8f8;--fg:#171a1a;--muted:#545b5b;--faint:#879090;--card:#fff;--line:#e1e5e5;
+ --acc:#0f766e;--acc-bg:#e6f4f2;--var:#b45309;--var-bg:#fdf3e3;--ok:#15803d;--ok-bg:#e7f6ec;--bad:#b91c1c;--bad-bg:#fdecec;
+ --neu:#c2410c;--neu-bg:#fff1e8;--wahl:#7e22ce;--wahl-bg:#f5ecff;--orig:#57534e;--orig-bg:#f1efec}
+@media(prefers-color-scheme:dark){:root{--bg:#121515;--fg:#e9eeee;--muted:#a7b1b1;--faint:#748080;--card:#1c2121;--line:#2f3838;
+ --acc:#5eead4;--acc-bg:#16302d;--var:#fcd34d;--var-bg:#33270a;--ok:#86efac;--ok-bg:#163322;--bad:#fca5a5;--bad-bg:#3a1616;
+ --neu:#fb923c;--neu-bg:#3a2214;--wahl:#d8b4fe;--wahl-bg:#2e1a44;--orig:#c9c3bb;--orig-bg:#2a2724}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:18px 14px 90px}
+h1{font-size:21px;margin:0}
+.ver{font-size:11px;font-weight:700;background:var(--acc-bg);color:var(--acc);padding:2px 7px;border-radius:5px;vertical-align:3px}
+.sub{color:var(--muted);font-size:13.5px;margin:2px 0 10px}
+.banner{font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 11px;margin-bottom:12px;color:var(--muted)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.tab{flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--muted);padding:8px 13px;border-radius:9px;font:600 14px inherit;cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--acc-bg);border-color:var(--acc);color:var(--acc)}
+.hidden{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:12px}
+.step{display:flex;gap:12px}
+.num{flex:0 0 30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+.step h3{margin:3px 0 6px;font-size:16.5px}
+.q{font-weight:700;color:var(--acc)}
+.de{font-weight:600}
+.ru{color:var(--muted);font-size:14px}
+.v{background:var(--var-bg);color:var(--var);font-weight:700;border-radius:3px;padding:0 3px}
+.x{color:var(--bad);text-decoration:line-through}
+table{width:100%;border-collapse:collapse;margin:6px 0}
+td,th{padding:7px 7px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;font-size:14.5px}
+th{font-size:12px;color:var(--faint);font-weight:700}
+td.r{color:var(--muted);font-size:13.5px;width:42%}
+.b{display:inline-block;font-weight:800;font-size:9.5px;letter-spacing:.05em;padding:2px 5px;border-radius:4px;vertical-align:2px;white-space:nowrap;margin-right:4px}
+.b.orig{background:var(--orig-bg);color:var(--orig)}.b.ok{background:var(--ok-bg);color:var(--ok)}.b.neu{background:var(--neu-bg);color:var(--neu)}.b.wahl{background:var(--wahl-bg);color:var(--wahl)}
+.tip{font-size:13.5px;background:var(--acc-bg);border-radius:8px;padding:7px 10px;margin:8px 0}
+.warn{font-size:13.5px;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:7px 10px;margin:8px 0}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;margin:8px 0}
+.flow span{background:var(--acc-bg);color:var(--acc);border-radius:7px;padding:4px 9px;font-weight:600}
+.flow i{color:var(--faint);font-style:normal}
+.btn{background:var(--card);border:1px solid var(--line);color:var(--fg);padding:9px 12px;border-radius:9px;font:600 14px inherit;cursor:pointer;margin:3px 4px 3px 0;text-align:left}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.good{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.btn.badc{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.btn[disabled]{opacity:.55;cursor:default}
+.opts{display:flex;flex-direction:column;gap:2px;margin:6px 0}
+.fb{border-radius:9px;padding:8px 11px;margin:6px 0;font-size:14.5px}
+.fb.ok{background:var(--ok-bg);color:var(--ok)} .fb.no{background:var(--bad-bg);color:var(--bad)}
+.res{border-left:4px solid var(--acc);padding:6px 10px;margin:6px 0;background:var(--acc-bg);border-radius:0 8px 8px 0}
+.lbl{font-size:12px;color:var(--faint);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.task{font-size:16.5px;font-weight:600;margin:4px 0}
+.ctrl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--muted);padding:5px 11px;border-radius:16px;font:600 13px inherit;cursor:pointer}
+.chip.on{background:var(--acc-bg);border-color:var(--acc);color:var(--acc)}
+select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--fg);font:15px inherit;max-width:100%}
+td.cov{cursor:pointer;color:transparent!important;background:repeating-linear-gradient(45deg,var(--line) 0 6px,transparent 6px 12px)}
+td.cov *{visibility:hidden}
+.score{float:right;font-size:13px;color:var(--faint);font-weight:700}
+h2{font-size:17px;margin:18px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Начало ФБ <span class="ver" id="ver"></span></h1>
+<p class="sub">Forumsbeitrag · от первого предложения до первого довода · к каждой немецкой строке русский перевод</p>
+<div class="banner">Черновик до корректора. <span class="b neu">СОВЕТ</span> — ещё не решено: голова + in Sachen, второе предложение, «предложение потери». <span class="b ok">ДА</span> — ты уже согласен: позиция, довод «подходит не каждому», рамки со словами темы. <span class="b orig">ТВОЁ</span> — из твоего шаблона.</div>
+<div class="tabs">
+ <button class="tab on" data-t="wie">Как строить</button>
+ <button class="tab" data-t="spick">Шпаргалка</button>
+ <button class="tab" data-t="train">Тренажёр</button>
+ <button class="tab" data-t="alle">30 начал</button>
+</div>
+<section id="wie"></section>
+<section id="spick" class="hidden"></section>
+<section id="train" class="hidden"></section>
+<section id="alle" class="hidden">
+ <div class="ctrl"><select id="aSel"></select></div>
+ <div class="ctrl"><span class="ru">Закрыть:</span>
+  <button class="chip on" data-h="none">ничего</button><button class="chip" data-h="ru">русский</button><button class="chip" data-h="de">немецкий</button>
+  <span class="ru">· нажми на клетку — откроется</span></div>
+ <div id="aBody"></div>
+</section>
+</div>
+<script src="data.js?v=0.1"></script>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mark=s=>esc(s).replace(/⟦/g,'<span class="v">').replace(/⟧/g,'</span>').replace(/\[([^\]]+)\]/g,'<span class="v">[$1]</span>');
+const LBL={orig:'ТВОЁ',ok:'ДА',neu:'СОВЕТ',wahl:'ВЫБОР'};
+const badge=h=>h&&LBL[h]?`<span class="b ${h}">${LBL[h]}</span>`:'';
+const HD=Object.fromEntries(HEADS.map(h=>[h.k,h])), TL=Object.fromEntries(TAILS.map(t=>[t.k,t])), GD=Object.fromEntries(GRUENDE.map(g=>[g.k,g]));
+const TN=Object.fromEntries(THEMEN.map(t=>[t.n,t]));
+$('#ver').textContent='v'+DATA_VERSION;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
+ ['wie','spick','train','alle'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==b.dataset.t));window.scrollTo(0,0);});
+const pair=(de,ru,h)=>`<div>${badge(h)}<span class="de">${mark(de)}</span></div><div class="ru">${mark(ru)}</div>`;
+const POS={de:'Ich unterstütze diese Maßnahme auf keinen Fall, da sie für uns Mitarbeiter mehr Nachteile als Vorteile bringt.',ru:'Я ни в коем случае не поддерживаю эту меру, так как она приносит нам, сотрудникам, больше минусов, чем плюсов.'};
+const G1={de:'Dafür gibt es mehrere Gründe. Erstens: Ein wesentlicher Nachteil ist, dass [X].',ru:'Этому есть несколько причин. Во-первых, существенный недостаток в том, что [X].'};
+const S1=(t)=>`Im Team wird über ⟦${t.thema.de.split(' in Sachen ')[0]}⟧ in Sachen ⟦${t.wort}⟧ gestritten.`;
+const S1ru=(t)=>`В команде спорят ⟦${HD[t.kopf].ruO}⟧ насчёт ⟦${t.wortRu}⟧.`;
+
+/* ---------------- КАК СТРОИТЬ ---------------- */
+function chain(t){
+ const h=HD[t.kopf], tl=TL[t.tail], op=t.opening;
+ const g=op.find(s=>s.id==='5'), w=op.find(s=>s.id==='5b'), s2=op.find(s=>s.id==='3');
+ return `<div class="card"><div class="lbl">Тема ${t.n} · ${esc(t.titel)}</div>
+  <div class="task">${esc(t.aufgabe)}</div><div class="ru">${esc(t.aufgabeRu)}</div>
+  <table>
+  <tr><td><b>1. Голова.</b> ${esc(h.frage)} → <span class="v">${esc(h.de)}</span></td><td class="r">${esc(h.ru)}</td></tr>
+  <tr><td><b>2. Слово.</b> О чём задание одним словом? → <span class="v">${esc(t.wort)}</span></td><td class="r">${esc(t.wortRu)}</td></tr>
+  <tr><td><b>3. Предложение 1:</b> ${mark(S1(t))}</td><td class="r">${mark(S1ru(t))}</td></tr>
+  <tr><td><b>4. Предложение 2.</b> ${esc(tl.frage)} → ${mark(s2.de)}</td><td class="r">${mark(s2.ru)}</td></tr>
+  <tr><td><b>5. Позиция</b> — наизусть, всегда одна.</td><td class="r"></td></tr>
+  <tr><td><b>6. Довод 1.</b> ${esc((GD[t.grund]||{}).frage||'')} → ${mark(g.de)}</td><td class="r">${mark(g.ru)}</td></tr>
+  <tr><td><b>7. Слова темы:</b> ${mark(w.de)}</td><td class="r">${mark(w.ru)}</td></tr>
+  </table></div>`;
+}
+$('#wie').innerHTML=`
+<div class="card"><h3 style="margin-top:0">Зачем так сложно</h3>
+<p>Переписать задание нельзя — даже если переставить слова (сразу 0 баллов). Поэтому начало ФБ строится из двух предложений, и в обоих нет ни одного предложения из задания:</p>
+<div class="flow"><span>Предл. 1: ВИД перемены + ОБЛАСТЬ</span><i>→</i><span>Предл. 2: что ИСЧЕЗНЕТ / что это значит для нас</span><i>→</i><span>Позиция</span><i>→</i><span>Довод 1</span><i>→</i><span>Слова темы</span></div>
+<p class="ru">По-русски ты сделал бы так же: «В команде спорят о новых ограничениях насчёт еды в столовой. Мясных блюд тогда больше не будет.» Первое предложение показывает проверяющему, что ты понял тему, второе — что ты понял суть.</p></div>
+
+<div class="card step"><div class="num">1</div><div><h3>Голова — «что это по сути?»</h3>
+<p>Задавай вопросы по порядку и остановись на первом «да»:</p>
+<table>${HEADS.map(h=>`<tr><td class="q">${esc(h.frage)}</td><td><span class="de">${esc(h.de)}</span><div class="ru">${esc(h.ru)}</div></td></tr>`).join('')}</table>
+<div class="tip">Подходят две головы — бери <b>die neuen Pläne</b> (новые планы). Это джокер, он верен всегда, просто звучит общее.</div></div></div>
+
+<div class="card step"><div class="num">2</div><div><h3>Слово после «in Sachen» — о чём задание одним словом</h3>
+<p><b>in Sachen</b> = «насчёт». После него ставится одно существительное <b>как в словаре</b> — без артикля и без падежа.</p>
+<table><tr><td><span class="de">in Sachen Parkplatz</span></td><td class="r">насчёт парковки</td></tr>
+<tr><td><span class="x">in Sachen des Parkplatzes</span> · <span class="x">in Sachen der Parkplatz</span></td><td class="r">так нельзя</td></tr></table>
+<div class="warn">Калька с русского: «насчёт <u>парковки</u>» требует родительного падежа, и рука сама пишет des / der. По-немецки после in Sachen падежа нет. Как в английском: <i>regarding parking</i> — тоже без артикля.</div>
+<p>Откуда брать слово: одно слово из задания можно (это не перепечатка). Ещё лучше — слово-область, шире задания:</p>
+<table><tr><td>vegetarisches Essen → <span class="v">Kantinenessen</span></td><td class="r">вегетарианская еда → еда в столовой</td></tr>
+<tr><td>Jobticket oder Fahrrad → <span class="v">Arbeitsweg</span></td><td class="r">проездной или велосипед → дорога на работу</td></tr>
+<tr><td>mehr Praktikanten → <span class="v">Personal</span></td><td class="r">больше стажёров → персонал</td></tr></table></div></div>
+
+<div class="card step"><div class="num">3</div><div><h3>Собираешь предложение 1</h3>
+${pair('Im Team wird über [голова] in Sachen [слово] gestritten.','В команде спорят о [голове] насчёт [слова].','neu')}
+<p class="ru" style="margin-top:8px">Голова ставится в той же форме, что в таблице шага 1, ничего не меняешь. Три примера:</p>
+<table>${[16,1,9].map(n=>`<tr><td>${mark(S1(TN[n]))}</td><td class="r">${mark(S1ru(TN[n]))}</td></tr>`).join('')}</table>
+<div class="tip">Знакомая тема — можно одним точным словом вместо «голова + in Sachen + слово»: <b>Im Team wird über die neue Anwesenheitspflicht gestritten.</b> — В команде спорят о новой обязанности присутствовать. Список точных слов — в шпаргалке.</div></div></div>
+
+<div class="card step"><div class="num">4</div><div><h3>Предложение 2 — «что пропадёт? что это значит для нас?»</h3>
+<p>Пишешь не что вводят (это было бы задание), а что из-за этого <b>исчезнет</b> или что это значит для нас. Выбор — по тому же вопросу:</p>
+<table>${TAILS.map(t=>`<tr><td class="q">${esc(t.frage)}</td><td>${pair(t.de,t.ru,'neu')}<div class="ru" style="font-size:12.5px">вставка: ${esc(t.x)}</div></td></tr>`).join('')}</table>
+<div class="tip">Голова и хвост обычно идут парой: Einschränkungen → «исчезнет», Kosten → «платим», Pflicht → «обязаловка», Angebot → «планируется», Vorschläge → «вместе не дадут».</div></div></div>
+
+<div class="card step"><div class="num">5</div><div><h3>Позиция — наизусть, всегда одна</h3>${pair(POS.de,POS.ru,'ok')}</div></div>
+
+<div class="card step"><div class="num">6</div><div><h3>Довод 1 — «кто платит?»</h3>${pair(G1.de,G1.ru,'orig')}
+<table style="margin-top:8px">${GRUENDE.map(g=>`<tr><td class="q">${esc(g.frage)}</td><td>${pair('… dass '+g.de,'… что '+g.ru,g.h)}</td></tr>`).join('')}</table>
+<div class="tip">Тема-выбор (entweder … oder): довод 1 зеркальный — «Ein wesentlicher <b>Vorteil</b> ist, dass …» (плюс того варианта, который выбрал). Это пока ВЫБОР.</div></div></div>
+
+<div class="card step"><div class="num">7</div><div><h3>Сразу после довода — слова темы (место одно)</h3>
+<p>Берёшь <b>одно</b> из трёх:</p>
+<table><tr><td class="q">Слова есть</td><td>${pair('Themen wie [A], [B] und [C] spielen dabei eine große Rolle.','Такие темы, как [A], [B] и [C], играют при этом большую роль.','ok')}<div class="ru" style="font-size:12.5px">слова как в словаре; ещё три рамки — в шпаргалке</div></td></tr>
+<tr><td class="q">Слов мало</td><td>«предложение потери» — учишь целиком, выбираешь по вопросу «что мы теряем?» (9 штук в шпаргалке) ${badge('neu')}</td></tr>
+<tr><td class="q">Ничего не подошло</td><td>${pair('Was für den einen kein Problem ist, bedeutet für den anderen eine echte Belastung – zum Beispiel für Kollegen mit Familie.','То, что для одного не проблема, для другого настоящая нагрузка — например для коллег с семьёй.','neu')}</td></tr></table></div></div>
+
+<h2>Весь путь на трёх темах</h2>
+${[9,1,16].map(n=>chain(TN[n])).join('')}`;
+
+/* ---------------- ШПАРГАЛКА ---------------- */
+$('#spick').innerHTML=`
+<div class="card"><h3 style="margin-top:0">Предложение 1</h3>${pair('Im Team wird über [голова] in Sachen [слово] gestritten.','В команде спорят о [голове] насчёт [слова].','neu')}
+<table><tr><th>вопрос</th><th>голова</th><th>перевод</th></tr>${HEADS.map(h=>`<tr><td class="q">${esc(h.frage)}</td><td class="de">${esc(h.de)}</td><td class="r">${esc(h.ru)}</td></tr>`).join('')}</table>
+<p class="ru">Рамка учителя ${badge('wahl')}: <span class="de">Ich habe gerade von [голова, Dativ] in Sachen [слово] erfahren und bin ehrlich gesagt ziemlich sauer darüber.</span> — Я только что узнал о [голове] насчёт [слова] и, честно говоря, довольно зол из-за этого. Голова в Dativ: ${HEADS.map(h=>esc(h.dat)).join(' · ')}.</p></div>
+<div class="card"><h3 style="margin-top:0">Точные слова для знакомых тем ${badge('neu')}</h3>
+<table>${THEMEN.filter(t=>t.exakt).map(t=>`<tr><td>№${t.n} · <span class="de">${esc(t.exakt.de)}</span></td><td class="r">${esc(t.exakt.ru)}</td></tr>`).join('')}</table></div>
+<div class="card"><h3 style="margin-top:0">Предложение 2</h3><table>${TAILS.map(t=>`<tr><td class="q">${esc(t.frage)}</td><td>${pair(t.de,t.ru,'neu')}</td></tr>`).join('')}</table></div>
+<div class="card"><h3 style="margin-top:0">Позиция и довод 1</h3>${pair(POS.de,POS.ru,'ok')}<div style="height:8px"></div>${pair(G1.de,G1.ru,'orig')}
+<table>${GRUENDE.map(g=>`<tr><td class="q">${esc(g.frage)}</td><td>${pair(g.de,g.ru,g.h)}</td></tr>`).join('')}</table></div>
+<div class="card"><h3 style="margin-top:0">Слова темы — рамки ${badge('ok')}</h3>
+<table><tr><td>${pair('Themen wie [A], [B] und [C] spielen dabei eine große Rolle.','Такие темы, как [A], [B] и [C], играют при этом большую роль.')}</td></tr>
+<tr><td>${pair('Dabei denke ich vor allem an [A], [B] und [C].','При этом я думаю прежде всего о [A], [B] и [C].')}</td></tr>
+<tr><td>${pair('Bei uns fehlen leider [A] und [B].','У нас, к сожалению, не хватает [A] и [B].')}</td></tr>
+<tr><td>${pair('[A] und [B] sind für viele Kollegen ein echtes Problem.','[A] и [B] — настоящая проблема для многих коллег.')}</td></tr></table>
+<div class="tip">Вставка: множественное число или без артикля (Lärm, Stress); прилагательное всегда на -e (hohe Kosten, lange Wege).</div></div>
+<div class="card"><h3 style="margin-top:0">Предложения потери ${badge('neu')}</h3><table>${LOSS.map(l=>`<tr><td class="q">${esc(l.frage)}</td><td>${pair(l.de,l.ru)}</td></tr>`).join('')}</table></div>`;
+
+/* ---------------- ТРЕНАЖЁР ---------------- */
+let order=[],ti=0,ans={},score={ok:0,all:0},showRu=false;
+const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+function tStart(){order=shuffle(THEMEN.slice());ti=0;ans={};tRender();}
+function choose(step,k){ if(ans[step]!==undefined) return; const t=order[ti]; let ok;
+ if(step==='kopf') ok=(k===t.kopf||t.alt.includes(k)||k==='P');
+ if(step==='tail') ok=(k===t.tail||k==='J');
+ if(step==='grund') ok=(k===t.grund);
+ ans[step]={k,ok}; score.all++; if(ok) score.ok++; tRender(); }
+function tRender(){
+ const t=order[ti], h=HD[t.kopf], tl=TL[t.tail], op=t.opening, T4=t.typ==='T4';
+ const s=id=>op.find(x=>x.id===id);
+ let o=`<div class="card"><span class="score">верно ${score.ok} из ${score.all}</span><div class="lbl">Тема ${ti%order.length+1} из ${order.length} · №${t.n} ${esc(t.titel)}</div>
+  <div class="task">${esc(t.aufgabe)}</div>
+  ${showRu?`<div class="ru">${esc(t.aufgabeRu)}</div>`:`<button class="chip" id="tRu">перевод задания</button>`}</div>`;
+ // шаг 1
+ o+=`<div class="card"><div class="lbl">Шаг 1 · голова — что это по сути?</div>`;
+ if(!ans.kopf){ o+=`<div class="opts">${HEADS.map(x=>`<button class="btn" data-s="kopf" data-k="${x.k}">${esc(x.de)} <span class="ru">— ${esc(x.ru)}</span></button>`).join('')}</div></div>`; $('#train').innerHTML=o; bind(); return; }
+ const a1=ans.kopf;
+ o+= a1.ok ? `<div class="fb ok">${a1.k==='P'&&t.kopf!=='P'?`Джокер — верно всегда. Точнее: <b>${esc(h.de)}</b> (${esc(h.ru)}) — ${esc(h.frage)}`:`Верно: <b>${esc(HD[a1.k].de)}</b>${a1.k!==t.kopf?` (в образце — ${esc(h.de)}, оба подходят)`:''}`}</div>`
+   : `<div class="fb no">Лучше: <b>${esc(h.de)}</b> (${esc(h.ru)}). Вопрос: ${esc(h.frage)} Не уверен — бери die neuen Pläne.</div>`;
+ o+=`</div>`;
+ // шаг 2
+ o+=`<div class="card"><div class="lbl">Шаг 2 · слово после in Sachen — о чём задание одним словом?</div>`;
+ if(!ans.wort){ o+=`<p class="ru">Подумай сам, потом открой.</p><button class="btn pri" id="tWort">Показать</button></div>`; $('#train').innerHTML=o; bind(); return; }
+ o+=`<div class="res">${pair(S1(t),S1ru(t),'neu')}</div>${t.exakt?`<div class="tip">Точное слово: <b>Im Team wird über ${esc(t.exakt.de)} gestritten.</b> — ${esc(t.exakt.ru)}</div>`:''}</div>`;
+ // шаг 3
+ o+=`<div class="card"><div class="lbl">Шаг 3 · предложение 2 — что пропадёт / что это значит для нас?</div>`;
+ if(!ans.tail){ o+=`<div class="opts">${TAILS.map(x=>`<button class="btn" data-s="tail" data-k="${x.k}">${esc(x.frage)}</button>`).join('')}</div></div>`; $('#train').innerHTML=o; bind(); return; }
+ const a3=ans.tail;
+ o+= a3.ok ? `<div class="fb ok">${a3.k==='J'&&t.tail!=='J'?`Джокер подходит всегда. Точнее: «${esc(tl.frage)}»`:'Верно'}</div>` : `<div class="fb no">Лучше: «${esc(tl.frage)}»</div>`;
+ o+=`<div class="res">${pair(s('3').de,s('3').ru,'neu')}</div></div>`;
+ // шаг 4
+ o+=`<div class="card"><div class="lbl">Шаг 4 · позиция и довод 1 — кто платит?</div>`;
+ if(T4){ if(!ans.grund) ans.grund={k:'-',ok:null};
+   o+=`<div class="tip">Тема-выбор: позиция и довод 1 — зеркальные (плюс выбранного варианта). Пока ВЫБОР.</div>`;
+ } else if(!ans.grund){ o+=`<div class="opts">${GRUENDE.map(x=>`<button class="btn" data-s="grund" data-k="${x.k}">${esc(x.frage)}</button>`).join('')}</div></div>`; $('#train').innerHTML=o; bind(); return; }
+ else { const a4=ans.grund, g=GD[t.grund]; o+= a4.ok?`<div class="fb ok">Верно</div>`:`<div class="fb no">Лучше: «${esc(g.frage)}»</div>`; }
+ o+=`<div class="res">${pair(s('4').de,s('4').ru,s('4').h)}</div><div class="res">${pair(s('5').de,s('5').ru,s('5').h)}</div></div>`;
+ // шаг 5
+ o+=`<div class="card"><div class="lbl">Шаг 5 · сразу после довода — слова темы</div><div class="res">${pair(s('5b').de,s('5b').ru,s('5b').h)}</div></div>`;
+ o+=`<div class="card"><div class="lbl">Всё начало целиком · ${t.woerter} слов</div><table>${op.map(x=>`<tr><td>${badge(x.h)}${mark(x.de)}</td><td class="r">${mark(x.ru)}</td></tr>`).join('')}</table>
+  <button class="btn pri" id="tNext">Следующая тема →</button></div>`;
+ $('#train').innerHTML=o; bind();
+}
+function bind(){
+ document.querySelectorAll('#train [data-s]').forEach(b=>b.onclick=()=>choose(b.dataset.s,b.dataset.k));
+ const w=$('#tWort'); if(w) w.onclick=()=>{ans.wort=true;tRender();};
+ const r=$('#tRu'); if(r) r.onclick=()=>{showRu=true;tRender();};
+ const n=$('#tNext'); if(n) n.onclick=()=>{ti=(ti+1)%order.length;ans={};showRu=false;tRender();window.scrollTo(0,0);};
+}
+tStart();
+
+/* ---------------- 30 НАЧАЛ ---------------- */
+let hide='none';
+$('#aSel').innerHTML=THEMEN.map((t,i)=>`<option value="${i}">${t.n}. ${esc(t.titel)} · ${t.woerter} слов</option>`).join('');
+function aRender(){ const t=THEMEN[+$('#aSel').value];
+ $('#aBody').innerHTML=`<div class="card"><div class="task">${esc(t.aufgabe)}</div><div class="ru">${esc(t.aufgabeRu)}</div></div>
+ <div class="card"><table>${t.opening.map(x=>`<tr><td class="cde">${badge(x.h)}${mark(x.de)}</td><td class="r cru">${mark(x.ru)}</td></tr>`).join('')}</table></div>`;
+ applyHide(); }
+function applyHide(){ document.querySelectorAll('#aBody td.cde,#aBody td.cru').forEach(td=>{const c=(hide==='ru'&&td.classList.contains('cru'))||(hide==='de'&&td.classList.contains('cde'));
+ td.classList.toggle('cov',c); td.onclick=c?()=>td.classList.remove('cov'):null;}); }
+$('#aSel').onchange=aRender;
+document.querySelectorAll('#alle [data-h]').forEach(c=>c.onclick=()=>{hide=c.dataset.h;document.querySelectorAll('#alle [data-h]').forEach(x=>x.classList.toggle('on',x===c));applyHide();});
+aRender();
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
